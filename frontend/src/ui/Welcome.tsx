@@ -1,17 +1,26 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, useEffect } from 'react'
 import cx from 'classnames'
 
-const readName = () => localStorage.getItem('name')
-const writeName = (value: string) => localStorage.setItem('name', value)
+export interface WelcomeProps {
+  name: string | null
+  onLogin: (name: string) => void
+}
 
-export function Welcome () {
-  const [visible, setVisible] = useState(() => !readName())
-  const [name, setName] = useState(() => readName() || '')
+export function Welcome (props: WelcomeProps) {
+  const visible = !props.name
+  const [name, setName] = useState(props.name || '')
+
+  useEffect(() => {
+    if (visible) {
+      setName('')
+    }
+  }, [visible])
 
   function onSubmit (e: FormEvent) {
     e.preventDefault()
-    setVisible(false)
-    writeName(name)
+    if (name !== '') {
+      props.onLogin(name)
+    }
   }
 
   return (
