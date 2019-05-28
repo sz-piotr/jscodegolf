@@ -20,7 +20,7 @@ export function App () {
     <>
       <Welcome name={name} onLogin={onLogin} />
       <Navbar name={name || ''} onLogout={onLogout} />
-      <Challenges />
+      <Challenges shouldFocus={!!name} />
     </>
   )
 }

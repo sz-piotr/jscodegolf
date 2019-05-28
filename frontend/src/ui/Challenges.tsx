@@ -4,17 +4,21 @@ import { useAsync } from './hooks'
 import { getChallenges } from './api'
 import { Scores } from './Scores'
 
-export function Challenges () {
+export interface ChallengesProps {
+  shouldFocus: boolean
+}
+
+export function Challenges ({ shouldFocus }: ChallengesProps) {
   const ref = useRef<HTMLInputElement>(null)
   const [challenges] = useAsync(getChallenges, [])
   const [selected, setSelected] = useState(0)
   const challenge = challenges && challenges.find(({ id }) => id === selected)
 
   useEffect(() => {
-    if (challenge && ref.current) {
+    if (challenge && shouldFocus && ref.current) {
       ref.current.focus()
     }
-  }, [challenge])
+  }, [challenge, shouldFocus])
 
   return (
     <div className="challenges">
