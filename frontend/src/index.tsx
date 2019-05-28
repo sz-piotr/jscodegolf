@@ -3,7 +3,7 @@ import './styles/main.less'
 import React from 'react'
 import { render } from 'react-dom'
 
-import { App } from './App'
+import { App } from './ui/App'
 
 render(
   <App />,
