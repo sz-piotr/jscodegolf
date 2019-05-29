@@ -1,6 +1,17 @@
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-export async function getChallenges () {
+export interface ApiChallenge {
+  id: number,
+  title: string,
+  description: string,
+}
+
+export interface ApiScore {
+  name: string,
+  score: number,
+}
+
+export async function getChallenges (): Promise<ApiChallenge[]> {
   await sleep(500)
   return [
     {
@@ -21,7 +32,7 @@ export async function getChallenges () {
   ]
 }
 
-export async function getScores (challengeId: number) {
+export async function getScores (challengeId: number): Promise<ApiScore[]> {
   await sleep(500)
   return [
     {
@@ -37,4 +48,17 @@ export async function getScores (challengeId: number) {
       score: 34 + challengeId * 3,
     }
   ]
+}
+
+export async function submitSolution (challengeId: number, solution: string) {
+  return {
+    success: true,
+    scores: [
+      {
+        name: localStorage.getItem('name'),
+        score: solution.length,
+      },
+      ...await getScores(challengeId)
+    ] as ApiScore[]
+  }
 }

@@ -1,27 +1,22 @@
 import React from 'react'
-import { useAsync } from './hooks'
-import { getScores } from './api'
+import { ApiScore } from './api'
 
 export interface ScoresProps {
-  challengeId: number
+  scores?: ApiScore[]
 }
 
-export function Scores ({ challengeId }: ScoresProps) {
-  const [scores] = useAsync(() => getScores(challengeId), [challengeId])
-
-  return (
-    <>
-      <ol className="scores">
-        {scores && scores.map((entry, index) => (
-          <li className="scores-entry" key={index}>
-            <span className="scores-name">{entry.name} </span>
-            <span className="scores-score">({entry.score})</span>
-          </li>
-        ))}
-      </ol>
-      {scores && scores.length === 0 && (
-        <div className="scores-empty">There are no scores</div>
-      )}
-    </>
-  )
-}
+export const Scores = ({ scores }: ScoresProps) => (
+  <>
+    <ol className="scores">
+      {scores && scores.map((entry, index) => (
+        <li className="scores-entry" key={index}>
+          <span className="scores-name">{entry.name} </span>
+          <span className="scores-score">({entry.score})</span>
+        </li>
+      ))}
+    </ol>
+    {scores && scores.length === 0 && (
+      <div className="scores-empty">There are no scores</div>
+    )}
+  </>
+)

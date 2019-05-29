@@ -1,24 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { useAsync } from './hooks'
 import { getChallenges } from './api'
-import { Scores } from './Scores'
+import { Challenge } from './Challenge';
 
 export interface ChallengesProps {
   shouldFocus: boolean
 }
 
 export function Challenges ({ shouldFocus }: ChallengesProps) {
-  const ref = useRef<HTMLInputElement>(null)
   const [challenges] = useAsync(getChallenges, [])
   const [selected, setSelected] = useState(0)
   const challenge = challenges && challenges.find(({ id }) => id === selected)
-
-  useEffect(() => {
-    if (challenge && shouldFocus && ref.current) {
-      ref.current.focus()
-    }
-  }, [challenge, shouldFocus])
 
   return (
     <div className="challenges">
@@ -32,13 +25,7 @@ export function Challenges ({ shouldFocus }: ChallengesProps) {
           </li>
         ))}
       </ul>
-      {challenge && (
-        <div className="challenge">
-          <div className="challenge-description">{challenge.description}</div>
-          <input ref={ref} className="challenge-input" />
-          <Scores challengeId={challenge.id} />
-        </div>
-      )}
+      {challenge && <Challenge challenge={challenge} shouldFocus={shouldFocus} />}
     </div>
   )
 }
