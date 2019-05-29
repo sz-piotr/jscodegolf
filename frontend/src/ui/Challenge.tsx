@@ -11,8 +11,15 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState('')
   const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
 
   const [scores, setScores] = useState<ApiScore[] | undefined>(undefined)
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.spellcheck = false
+    }
+  }, [])
 
   useEffect(() => {
     getScores(challenge.id).then(setScores)
@@ -23,6 +30,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
     if (challenge && shouldFocus && ref.current) {
       ref.current.focus()
       setValue('')
+      setError('')
     }
   }, [challenge, shouldFocus])
 
@@ -34,6 +42,9 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
       if (result.success) {
         setScores(result.scores)
         setValue('')
+        setError('')
+      } else {
+        setError(result.error)
       }
     } finally {
       setPending(false)
@@ -52,6 +63,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
           onChange={e => setValue(e.target.value)}
           disabled={pending}
         />
+        {error && <div className="challenge-error">{error}</div>}
       </form>
       <Scores scores={scores} />
     </div>

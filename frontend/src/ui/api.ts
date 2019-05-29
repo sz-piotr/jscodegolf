@@ -51,14 +51,21 @@ export async function getScores (challengeId: number): Promise<ApiScore[]> {
 }
 
 export async function submitSolution (challengeId: number, solution: string) {
-  return {
-    success: true,
-    scores: [
-      {
-        name: localStorage.getItem('name'),
-        score: solution.length,
-      },
-      ...await getScores(challengeId)
-    ] as ApiScore[]
+  if (Math.random() < 0.5) {
+    return {
+      success: true as const,
+      scores: [
+        {
+          name: localStorage.getItem('name'),
+          score: solution.length,
+        },
+        ...await getScores(challengeId)
+      ] as ApiScore[]
+    }
+  } else {
+    return {
+      success: false as const,
+      error: 'Something went wrong. The tests are failing.\nError at line 1:4'
+    }
   }
 }
