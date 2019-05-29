@@ -17,6 +17,11 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
+
+  @media only screen and (max-width: 600px) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ccc;
+  }
 }
 
 .challenges-item {
@@ -39,6 +44,11 @@
   }
 }
 
+.challenge-description {
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
 .challenge-input {
   padding: 16px;
   width: 100%;
@@ -51,7 +61,8 @@
 }
 
 .challenge-error {
-  color: red;
+  color: #FC3939;
+  font-weight: bold;
   margin-top: 8px;
   white-space: pre-line;
 }
