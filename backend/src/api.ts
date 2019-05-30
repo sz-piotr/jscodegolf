@@ -24,4 +24,22 @@ router.get('/challenges', async (req, res) => {
   ])
 })
 
+router.get('/scores/:challenge', async (req, res) => {
+  res.json([
+    {
+      name: 'Helen',
+      score: 30 + req.params.challenge,
+    },
+    {
+      name: 'Lucy',
+      score: 31 + req.params.challenge * 2,
+    },
+    {
+      name: 'Martin',
+      score: 34 + req.params.challenge * 3,
+    }
+  ])
+})
+
+
 export default router

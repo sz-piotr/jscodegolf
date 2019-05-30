@@ -17,21 +17,8 @@ export async function getChallenges(): Promise<ApiChallenge[]> {
 }
 
 export async function getScores(challengeId: number): Promise<ApiScore[]> {
-  await sleep(500)
-  return [
-    {
-      name: 'Helen',
-      score: 30 + challengeId,
-    },
-    {
-      name: 'Lucy',
-      score: 31 + challengeId * 2,
-    },
-    {
-      name: 'Martin',
-      score: 34 + challengeId * 3,
-    }
-  ]
+  const res = await fetch(`/api/scores/${challengeId}`)
+  return res.json()
 }
 
 export async function submitSolution(challengeId: number, solution: string) {
