@@ -11,30 +11,12 @@ export interface ApiScore {
   score: number,
 }
 
-export async function getChallenges (): Promise<ApiChallenge[]> {
-  await sleep(500)
-  return [
-    {
-      id: 0,
-      title: 'Introduction',
-      description: 'Write a function that returns true.\n' +
-        'Multiline description is something very important and must be ' +
-        'supported in order to allow for optimal experience.'
-    },
-    {
-      id: 1,
-      title: 'Format number',
-      description: 'Write a function that formats the given number'
-    },
-    {
-      id: 2,
-      title: 'undefined',
-      description: 'Write a function that deletes all undefined properties from an object'
-    },
-  ]
+export async function getChallenges(): Promise<ApiChallenge[]> {
+  const res = await fetch('/api/challenges')
+  return res.json()
 }
 
-export async function getScores (challengeId: number): Promise<ApiScore[]> {
+export async function getScores(challengeId: number): Promise<ApiScore[]> {
   await sleep(500)
   return [
     {
@@ -52,7 +34,7 @@ export async function getScores (challengeId: number): Promise<ApiScore[]> {
   ]
 }
 
-export async function submitSolution (challengeId: number, solution: string) {
+export async function submitSolution(challengeId: number, solution: string) {
   if (Math.random() < 0.5) {
     return {
       success: true as const,
