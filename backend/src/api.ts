@@ -1,9 +1,10 @@
 import { Router } from 'express'
+import { asyncHandler } from './util/asyncHandler';
 
 const router = Router()
 
-router.get('/challenges', async (req, res) => {
-  res.json([
+router.get('/challenges', asyncHandler(
+  () => [
     {
       id: 0,
       title: 'Introduction',
@@ -21,8 +22,8 @@ router.get('/challenges', async (req, res) => {
       title: 'undefined',
       description: 'Write a function that deletes all undefined properties from an object'
     },
-  ])
-})
+  ],
+))
 
 router.get('/scores/:challenge', async (req, res) => {
   res.json([
