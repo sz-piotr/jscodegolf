@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { asyncHandler } from './util/asyncHandler';
+import { validate, validateString, validateNumber } from './util/validate';
 
 const router = Router()
 
@@ -25,22 +26,25 @@ router.get('/challenges', asyncHandler(
   ],
 ))
 
-router.get('/scores/:challenge', async (req, res) => {
-  res.json([
+router.get('/scores/:challenge', asyncHandler(
+  validate({
+    challenge: validateNumber,
+  }),
+  ({ challenge }) => [
     {
       name: 'Helen',
-      score: 30 + req.params.challenge,
+      score: 30 + challenge,
     },
     {
       name: 'Lucy',
-      score: 31 + req.params.challenge * 2,
+      score: 31 + challenge * 2,
     },
     {
       name: 'Martin',
-      score: 34 + req.params.challenge * 3,
+      score: 34 + challenge * 3,
     }
-  ])
-})
+  ],
+))
 
 
 export default router
