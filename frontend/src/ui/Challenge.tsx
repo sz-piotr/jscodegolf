@@ -13,6 +13,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   const [value, setValue] = useState('')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [output, setOutput] = useState('')
 
   const [scores, setScores] = useState<ApiScore[] | undefined>(undefined)
 
@@ -55,9 +56,10 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
 
   useEffect(() => {
     setError('')
+    setOutput('')
     if (value !== '') {
       try {
-        console.log(execute(value, []))
+        setOutput(JSON.stringify(execute(value, [])))
       } catch (err) {
         setError(err.message)
       }
@@ -76,6 +78,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
           disabled={pending}
         />
         {error && <div className="challenge-error">{error}</div>}
+        {output && <div className="challenge-output">{output}</div>}
       </form>
       <Scores scores={scores} />
     </div>
