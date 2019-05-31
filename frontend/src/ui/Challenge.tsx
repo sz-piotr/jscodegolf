@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, FormEvent } from 'react'
 import { Scores } from './Scores'
 import { submitSolution, ApiChallenge, ApiScore, getScores } from './api'
+import { execute } from './execute';
 
 export interface ChallengeProps {
   challenge: ApiChallenge,
@@ -34,7 +35,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
     }
   }, [challenge, shouldFocus])
 
-  async function onSubmit (e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault()
     setPending(true)
     try {
@@ -51,6 +52,17 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
       ref.current && ref.current.focus()
     }
   }
+
+  useEffect(() => {
+    setError('')
+    if (value !== '') {
+      try {
+        console.log(execute(value, []))
+      } catch (err) {
+        setError(err.message)
+      }
+    }
+  }, [value])
 
   return (
     <div className="challenge">
