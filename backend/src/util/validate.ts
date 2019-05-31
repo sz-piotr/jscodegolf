@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request } from 'express'
 
 type Either<L, R> = { left: L } | { right: R }
 const left = <L> (left: L) => ({ left })
@@ -24,6 +24,8 @@ export const sanitize = <T>(schema: Schema<T>) => (req: Request) => {
     let result
     if (key === 'body') {
       result = schema[key](req.body, 'body')
+    } else if (key === 'query') {
+      result = schema[key](req.query, 'query')
     } else {
       result = schema[key](req.params[key], `params.${key}`)
     }

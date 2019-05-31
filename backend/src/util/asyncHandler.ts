@@ -1,39 +1,44 @@
 import { RequestHandler, Request } from "express";
 
-type Fn<T, U> = (data: T) => U | Promise<U>
+type Fn<T, U> = (data: T) => U
 
-type Result = any
+type Response<R> = { data: R, status: number }
+export const responseOf = <R> (data: R, status = 200) => ({ data, status })
 
-export function asyncHandler (a: Fn<Request, Result>): RequestHandler
-export function asyncHandler <A>(
-  a: Fn<Request, A>,
-  b: Fn<A, Result>,
+type UnPromise<T> = T extends Promise<infer U> ? U : T
+
+export function asyncHandler <R>(
+  a: Fn<Request, Response<R> | Promise<Response<R>>>,
 ): RequestHandler
-export function asyncHandler <A, B>(
+export function asyncHandler <A, R>(
   a: Fn<Request, A>,
-  b: Fn<A, B>,
-  c: Fn<B, Result>,
+  b: Fn<UnPromise<A>, Response<R> | Promise<Response<R>>>,
 ): RequestHandler
-export function asyncHandler <A, B, C>(
+export function asyncHandler <A, B, R>(
   a: Fn<Request, A>,
-  b: Fn<A, B>,
-  c: Fn<B, C>,
-  d: Fn<C, Result>,
+  b: Fn<UnPromise<A>, B>,
+  c: Fn<UnPromise<B>, Response<R> | Promise<Response<R>>>,
 ): RequestHandler
-export function asyncHandler <A, B, C, D>(
+export function asyncHandler <A, B, C, R>(
   a: Fn<Request, A>,
-  b: Fn<A, B>,
-  c: Fn<B, C>,
-  d: Fn<C, D>,
-  e: Fn<D, Result>,
+  b: Fn<UnPromise<A>, B>,
+  c: Fn<UnPromise<B>, C>,
+  d: Fn<UnPromise<C>, Response<R> | Promise<Response<R>>>,
 ): RequestHandler
-export function asyncHandler <A, B, C, D, E>(
+export function asyncHandler <A, B, C, D, R>(
   a: Fn<Request, A>,
-  b: Fn<A, B>,
-  c: Fn<B, C>,
-  d: Fn<C, D>,
-  e: Fn<D, E>,
-  f: Fn<E, Result>,
+  b: Fn<UnPromise<A>, B>,
+  c: Fn<UnPromise<B>, C>,
+  d: Fn<UnPromise<C>, D>,
+  e: Fn<UnPromise<D>, Response<R> | Promise<Response<R>>>,
+): RequestHandler
+export function asyncHandler <A, B, C, D, E, R>(
+  a: Fn<Request, A>,
+  b: Fn<UnPromise<A>, B>,
+  c: Fn<UnPromise<B>, C>,
+  d: Fn<UnPromise<C>, D>,
+  e: Fn<UnPromise<D>, E>,
+  f: Fn<UnPromise<E>, Response<R> | Promise<Response<R>>>,
 ): RequestHandler
 export function asyncHandler (...handlers: Fn<any, any>[]): RequestHandler {
   return async (req, res, next) => {
@@ -42,8 +47,8 @@ export function asyncHandler (...handlers: Fn<any, any>[]): RequestHandler {
         handlers,
         (data, handler) => handler(data),
         req,
-      )
-      res.json(result)
+      ) as any as Response<any>
+      res.status(result.status).json(result.data)
       next()
     } catch (err) {
       next(err)

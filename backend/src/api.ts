@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { asyncHandler } from './util/asyncHandler';
-import { sanitize, asNumber } from './util/validate';
+import { asyncHandler, responseOf } from './util/asyncHandler';
+import { sanitize, asNumber, asObject, asString } from './util/validate';
 
 const router = Router()
 
 router.get('/challenges', asyncHandler(
-  () => [
+  () => responseOf([
     {
       id: 0,
       title: 'Introduction',
@@ -23,14 +23,14 @@ router.get('/challenges', asyncHandler(
       title: 'undefined',
       description: 'Write a function that deletes all undefined properties from an object'
     },
-  ],
+  ]),
 ))
 
 router.get('/scores/:challenge', asyncHandler(
   sanitize({
     challenge: asNumber,
   }),
-  ({ challenge }) => [
+  ({ challenge }) => responseOf([
     {
       name: 'Helen',
       score: 30 + challenge,
@@ -43,7 +43,7 @@ router.get('/scores/:challenge', asyncHandler(
       name: 'Martin',
       score: 34 + challenge * 3,
     }
-  ],
+  ]),
 ))
 
 
