@@ -6,7 +6,9 @@
   "author": "Marik-D <maretskii@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"cd backend && yarn start\" \"cd frontend && yarn start\""
+    "start-backend": "cd backend && yarn start",
+    "start-frontend": "cd frontend && yarn start",
+    "start": "concurrently \"npm:start-*\""
   },
   "devDependencies": {
     "concurrently": "^4.1.0"

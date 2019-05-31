@@ -1,50 +1,34 @@
 import { Router } from 'express'
 import { asyncHandler, responseOf } from './util/asyncHandler'
 import { sanitize, asNumber } from './util/validate'
+import { Services } from './services';
 
-const router = Router()
+export function apiRouter(services: Services) {
+  const router = Router()
 
-router.get('/challenges', asyncHandler(
-  () => responseOf([
-    {
-      id: 0,
-      title: 'Introduction',
-      description: 'Write a function that returns true.\n' +
-        'Multiline description is something very important and must be ' +
-        'supported in order to allow for optimal experience.'
-    },
-    {
-      id: 1,
-      title: 'Format number',
-      description: 'Write a function that formats the given number'
-    },
-    {
-      id: 2,
-      title: 'undefined',
-      description: 'Write a function that deletes all undefined properties from an object'
-    },
-  ]),
-))
+  router.get('/challenges', asyncHandler(
+    async () => responseOf(await services.challengeStorage.getChallenges()),
+  ))
 
-router.get('/scores/:challenge', asyncHandler(
-  sanitize({
-    challenge: asNumber,
-  }),
-  ({ challenge }) => responseOf([
-    {
-      name: 'Helen',
-      score: 30 + challenge,
-    },
-    {
-      name: 'Lucy',
-      score: 31 + challenge * 2,
-    },
-    {
-      name: 'Martin',
-      score: 34 + challenge * 3,
-    }
-  ]),
-))
+  router.get('/scores/:challenge', asyncHandler(
+    sanitize({
+      challenge: asNumber,
+    }),
+    ({ challenge }) => responseOf([
+      {
+        name: 'Helen',
+        score: 30 + challenge,
+      },
+      {
+        name: 'Lucy',
+        score: 31 + challenge * 2,
+      },
+      {
+        name: 'Martin',
+        score: 34 + challenge * 3,
+      }
+    ]),
+  ))
 
-
-export default router
+  return router
+}

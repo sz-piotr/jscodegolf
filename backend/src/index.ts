@@ -1,9 +1,25 @@
 import express from 'express'
-import apiRouter from './api'
+import Knex from 'knex'
+import { apiRouter } from './api'
+import { setup } from './services';
 
-const app = express()
+async function start() {
+  const database = Knex({
+    client: 'pg',
+    connection: 'postgres://postgres@localhost:5432/jscodegolf',
+  })
 
-app.use('/api', apiRouter)
+  await database.migrate.latest()
 
-const port = process.env.PORT || 3000
-app.listen(port, () => console.log(`🏌️  Listening on port ${port}`))
+  const services = setup(database)
+
+  const app = express()
+
+  app.use('/api', apiRouter(services))
+
+  const port = process.env.PORT || 3000
+
+  app.listen(port, () => console.log(`🏌️  Listening on port ${port}`))
+}
+
+start()
