@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { asyncHandler } from './util/asyncHandler';
-import { validate, validateString, validateNumber } from './util/validate';
+import { sanitize, asNumber } from './util/validate';
 
 const router = Router()
 
@@ -27,8 +27,8 @@ router.get('/challenges', asyncHandler(
 ))
 
 router.get('/scores/:challenge', asyncHandler(
-  validate({
-    challenge: validateNumber,
+  sanitize({
+    challenge: asNumber,
   }),
   ({ challenge }) => [
     {

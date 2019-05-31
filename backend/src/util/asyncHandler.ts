@@ -1,34 +1,61 @@
-import { Request, Response } from "express";
+import { RequestHandler, Request } from "express";
 
-type HandlerStep<T, U> = (data: T, req: Request, res: Response) => U | Promise<U>
+type Fn<T, U> = (data: T) => U | Promise<U>
 
-interface AsyncHandlerFn {
-  <T1>(
-    fn1: HandlerStep<never, T1>,
-  ): (req: Request, res: Response) => Promise<void>
-  <T1, T2>(
-    fn1: HandlerStep<never, T1>,
-    fn2: HandlerStep<T1, T2>,
-  ): (req: Request, res: Response) => Promise<void>
-}
+type Result = any
 
-export const asyncHandler: AsyncHandlerFn = (first: HandlerStep<never, any>, ...handlers: HandlerStep<any, any>[]) =>
-  async (req: Request, res: Response) => {
+export function asyncHandler (a: Fn<Request, Result>): RequestHandler
+export function asyncHandler <A>(
+  a: Fn<Request, A>,
+  b: Fn<A, Result>,
+): RequestHandler
+export function asyncHandler <A, B>(
+  a: Fn<Request, A>,
+  b: Fn<A, B>,
+  c: Fn<B, Result>,
+): RequestHandler
+export function asyncHandler <A, B, C>(
+  a: Fn<Request, A>,
+  b: Fn<A, B>,
+  c: Fn<B, C>,
+  d: Fn<C, Result>,
+): RequestHandler
+export function asyncHandler <A, B, C, D>(
+  a: Fn<Request, A>,
+  b: Fn<A, B>,
+  c: Fn<B, C>,
+  d: Fn<C, D>,
+  e: Fn<D, Result>,
+): RequestHandler
+export function asyncHandler <A, B, C, D, E>(
+  a: Fn<Request, A>,
+  b: Fn<A, B>,
+  c: Fn<B, C>,
+  d: Fn<C, D>,
+  e: Fn<D, E>,
+  f: Fn<E, Result>,
+): RequestHandler
+export function asyncHandler (...handlers: Fn<any, any>[]): RequestHandler {
+  return async (req, res, next) => {
     try {
       const result = await asyncReduce(
-        (data, handler) => handler(data, req, res),
         handlers,
-        first(undefined as never, req, res),
+        (data, handler) => handler(data),
+        req,
       )
       res.json(result)
+      next()
     } catch (err) {
-      res.status(500).json({
-        error: err.message,
-      })
+      next(err)
     }
   }
+}
 
-const asyncReduce = async <T, U>(reducer: (acc: U, item: T) => Promise<U>, items: T[], initial: U) => {
+const asyncReduce = async <T, U>(
+  items: T[],
+  reducer: (acc: U, item: T) => Promise<U>,
+  initial: U,
+) => {
   let acc = initial
   for (const item of items) {
     acc = await reducer(acc, item)
