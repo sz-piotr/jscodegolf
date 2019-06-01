@@ -1,8 +1,8 @@
 import Knex from 'knex'
-import { ChallengeStorage } from './ChallengeStorage'
+import { ChallengeService } from './ChallengeService'
 
 export function setup(database: Knex) {
-  const challengeStorage = new ChallengeStorage(database)
+  const challengeStorage = new ChallengeService(database)
 
   return {
     challengeStorage,

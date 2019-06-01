@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import cx from 'classnames'
 import { useAsync } from './hooks'
 import { getChallenges } from './api'
-import { Challenge } from './Challenge';
+import { Challenge } from './Challenge'
 
 export interface ChallengesProps {
   shouldFocus: boolean
@@ -10,7 +10,7 @@ export interface ChallengesProps {
 
 export function Challenges ({ shouldFocus }: ChallengesProps) {
   const [challenges] = useAsync(getChallenges, [])
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState('INTRODUCTION')
   const challenge = challenges && challenges.find(({ id }) => id === selected)
 
   return (

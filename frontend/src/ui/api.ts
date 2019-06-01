@@ -1,7 +1,5 @@
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
 export interface ApiChallenge {
-  id: number,
+  id: string,
   title: string,
   description: string,
 }
@@ -16,12 +14,12 @@ export async function getChallenges(): Promise<ApiChallenge[]> {
   return res.json()
 }
 
-export async function getScores(challengeId: number): Promise<ApiScore[]> {
+export async function getScores(challengeId: string): Promise<ApiScore[]> {
   const res = await fetch(`/api/scores/${challengeId}`)
   return res.json()
 }
 
-export async function submitSolution(challengeId: number, solution: string) {
+export async function submitSolution(challengeId: string, solution: string) {
   if (Math.random() < 0.5) {
     return {
       success: true as const,
