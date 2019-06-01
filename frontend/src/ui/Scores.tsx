@@ -10,7 +10,7 @@ export const Scores = ({ scores }: ScoresProps) => (
     <ol className="scores">
       {scores && scores.map((entry, index) => (
         <li className="scores-entry" key={index}>
-          <span className="scores-name">{entry.name} </span>
+          <span className="scores-name">{entry.player} </span>
           <span className="scores-score">({entry.score})</span>
         </li>
       ))}

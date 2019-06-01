@@ -1,10 +1,10 @@
 import { Request } from 'express'
 import { Either, isLeft, right, left } from './Either'
-import { InvalidRequest } from './errors';
+import { InvalidRequest } from './errors'
 
-export type ValidationError = { path: string, expected: string }
+export type SanitizeError = { path: string, expected: string }
 
-type Sanitize<T> = (data: unknown, path: string) => Either<T, ValidationError[]>
+type Sanitize<T> = (data: unknown, path: string) => Either<T, SanitizeError[]>
 
 type Schema<T> = {
   [K in keyof T]: Sanitize<T[K]>
@@ -33,10 +33,10 @@ export const sanitize = <T>(schema: Schema<T>) => (req: Request) => {
 export const asObject = <T extends object> (schema: Schema<T>): Sanitize<T> =>
   function (data, path) {
     if (typeof data !== 'object' || data === null) {
-      return right([{ path: '', expected: 'object' }])
+      return right([{ path, expected: 'object' }])
     }
     const value: T = {} as any
-    const errors: ValidationError[] = []
+    const errors: SanitizeError[] = []
     for (const key in schema) {
       const result = schema[key]((data as T)[key], `${path}.${key}`)
       if (isLeft(result)) {

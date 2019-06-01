@@ -3,6 +3,7 @@ import Knex from 'knex'
 import { router } from './routes'
 import { setup } from './services'
 import { errorHandler } from './util/errorHandler'
+import bodyParser from 'body-parser'
 
 async function start() {
   const database = Knex({
@@ -14,6 +15,7 @@ async function start() {
   const services = setup(database)
 
   const app = express()
+  app.use(bodyParser.json())
   app.use('/', router(services))
   app.use(errorHandler)
 
