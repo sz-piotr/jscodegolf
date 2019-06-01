@@ -1,7 +1,7 @@
 import { Challenge } from './Challenge'
 
 export const introduction: Challenge = {
-  id: 'INTRODUCTION',
+  id: 'introduction',
   title: 'Introduction',
   description: 'Write a function that returns true',
   tests: [

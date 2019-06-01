@@ -1,18 +1,10 @@
 import { Request } from 'express'
+import { Either, isLeft, right, left } from './Either'
+import { InvalidRequest } from './errors';
 
-type Either<L, R> = { left: L } | { right: R }
-const left = <L> (left: L) => ({ left })
-const right = <R> (right: R) => ({ right })
-function isLeft<L> (value: Either<L, any>): value is { left: L } {
-  return Object.hasOwnProperty.call(value, 'left')
-}
-function isRight<R> (value: Either<any, R>): value is { right: R } {
-  return Object.hasOwnProperty.call(value, 'right')
-}
+export type ValidationError = { path: string, expected: string }
 
-type Error = { path: string, expected: string }
-
-type Sanitize<T> = (data: unknown, path: string) => Either<T, Error[]>
+type Sanitize<T> = (data: unknown, path: string) => Either<T, ValidationError[]>
 
 type Schema<T> = {
   [K in keyof T]: Sanitize<T[K]>
@@ -32,7 +24,7 @@ export const sanitize = <T>(schema: Schema<T>) => (req: Request) => {
     if (isLeft(result)) {
       sanitized[key] = result.left
     } else {
-      throw result.right // TODO: figure it out
+      throw new InvalidRequest(result.right)
     }
   }
   return sanitized
@@ -44,7 +36,7 @@ export const asObject = <T extends object> (schema: Schema<T>): Sanitize<T> =>
       return right([{ path: '', expected: 'object' }])
     }
     const value: T = {} as any
-    const errors: Error[] = []
+    const errors: ValidationError[] = []
     for (const key in schema) {
       const result = schema[key]((data as T)[key], `${path}.${key}`)
       if (isLeft(result)) {

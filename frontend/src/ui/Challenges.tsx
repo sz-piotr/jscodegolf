@@ -10,7 +10,7 @@ export interface ChallengesProps {
 
 export function Challenges ({ shouldFocus }: ChallengesProps) {
   const [challenges] = useAsync(getChallenges, [])
-  const [selected, setSelected] = useState('INTRODUCTION')
+  const [selected, setSelected] = useState('introduction')
   const challenge = challenges && challenges.find(({ id }) => id === selected)
 
   return (

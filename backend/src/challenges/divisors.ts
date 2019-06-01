@@ -1,13 +1,13 @@
 import { Challenge } from './Challenge'
 
 export const divisors: Challenge = {
-  id: 'DIVISORS',
+  id: 'divisors',
   title: 'Divisors',
   description:
-    'Write a function that returns all of the divisors of a given number. ' +
+    'Write a function that returns all of the divisors of a given number.\n\n' +
     'For example:\n' +
-    'Input: 3, Ouput: 1, 3\n' +
-    'Input: 12, Ouput: 1, 2, 3, 4, 6, 12'
+    'fn(3) = [1, 3]\n' +
+    'fn(12) = [1, 2, 3, 4, 6, 12]'
   ,
   tests: [
     {
