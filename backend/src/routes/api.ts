@@ -31,8 +31,8 @@ export function apiRouter(challengeService: ChallengeService) {
         solution: asString,
       })
     }),
-    async function ({ challenge }) {
-      const result = await challengeService.getScores(challenge)
+    async function ({ challenge, body: { player, solution } }) {
+      const result = await challengeService.addScore(challenge, player, solution)
       return responseOf(result, 201)
     },
   ))

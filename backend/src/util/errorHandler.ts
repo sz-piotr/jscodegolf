@@ -1,20 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
-import { InvalidRequest } from './errors'
+import { InvalidRequest, ApiError } from './errors'
 
-function getMessage (error: any) {
+function getMessage(error: any) {
   if (error && typeof error.message === 'string') {
     return error.message.substring(0, 1000)
   }
   return 'Unkown error'
 }
 
-function preprocess (error: unknown) {
-  if (error instanceof InvalidRequest) {
-    return {
-      status: 400,
-      message: error.message,
-      errors: error.errors,
-    }
+function preprocess(error: unknown) {
+  if (error instanceof ApiError) {
+    return error.toJson()
   }
   return {
     status: 500,
@@ -23,7 +19,7 @@ function preprocess (error: unknown) {
 }
 
 
-export function errorHandler (err: unknown, req: Request, res: Response, next: NextFunction) {
+export function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction) {
   const error = preprocess(err)
   res.status(error.status)
   res.send(error)
