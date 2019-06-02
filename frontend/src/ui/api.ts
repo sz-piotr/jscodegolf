@@ -2,6 +2,7 @@ export interface ApiChallenge {
   id: string,
   title: string,
   description: string,
+  example: any[],
 }
 
 export interface ApiScore {

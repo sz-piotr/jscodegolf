@@ -5,6 +5,7 @@ export interface ApiChallenge {
   id: string
   title: string
   description: string
+  example: any[],
 }
 
 export interface ApiScore {
@@ -21,6 +22,7 @@ export class ChallengeService {
       id: challenge.id,
       title: challenge.title,
       description: challenge.description,
+      example: challenge.tests[0].args,
     }))
   }
 

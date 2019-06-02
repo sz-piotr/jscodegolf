@@ -59,7 +59,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
     setOutput('')
     if (value !== '') {
       try {
-        setOutput(JSON.stringify(execute(value, [])))
+        setOutput(JSON.stringify(execute(value, challenge.example)))
       } catch (err) {
         setError(err.message)
       }
@@ -78,7 +78,10 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
           disabled={pending}
         />
         {error && <div className="challenge-error">{error}</div>}
-        {output && <div className="challenge-output">{output}</div>}
+        {output && <div className="challenge-output">
+          <span>fn({challenge.example.map(x => JSON.stringify(x)).join(', ')}) = </span>
+          {output}
+        </div>}
       </form>
       <Scores scores={scores} />
     </div>
