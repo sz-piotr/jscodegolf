@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { Services } from 'src/services'
-import { apiRouter } from './api';
+import { apiRouter } from './api'
 
 export function router (services: Services) {
   const router = Router()

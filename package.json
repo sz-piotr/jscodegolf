@@ -6,9 +6,13 @@
   "author": "Marik-D <maretskii@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start-backend": "cd backend && yarn start",
-    "start-frontend": "cd frontend && yarn start",
-    "start": "concurrently \"npm:start-*\""
+    "build:backend": "cd backend && yarn && yarn build",
+    "build:frontend": "cd frontend && yarn && yarn build",
+    "build": "yarn build:backend && yarn build:frontend",
+    "start:backend": "cd backend && yarn start",
+    "start:frontend": "cd frontend && yarn start",
+    "start:dev": "concurrently \"npm:start:backend\" \"npm:start:frontend\"",
+    "start": "node backend/dist/index.js"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"
