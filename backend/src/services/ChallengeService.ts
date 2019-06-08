@@ -13,7 +13,7 @@ export interface ApiChallenge {
 export interface ApiScore {
   player: string
   score: number
-  time: Date
+  time: string
 }
 
 export class ChallengeService {
@@ -29,10 +29,23 @@ export class ChallengeService {
   }
 
   async getScores(challenge: string): Promise<ApiScore[]> {
-    return this.database('scores')
-      .select('player', 'score', 'time')
+    return this.database
+      .select('t.player', 't.score', 't.time')
+      .from(
+        this.database
+          .select('player')
+          .from('scores')
+          .min('score as score')
+          .where('challenge', challenge)
+          .groupBy('player')
+          .as('m')
+      )
+      .innerJoin('scores as t', function () {
+        this
+          .on('t.player', 'm.player')
+          .andOn('t.score', 'm.score')
+      })
       .where('challenge', challenge)
-      .orderBy('score', 'asc')
   }
 
   async addScore(challengeId: string, player: string, solution: string) {
