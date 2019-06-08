@@ -6,8 +6,11 @@
   "author": "Marik-D <maretskii@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build:backend": "cd backend && yarn && yarn build",
-    "build:frontend": "cd frontend && yarn && yarn build",
+    "install:backend": "cd backend && NODE_ENV=development yarn",
+    "install:frontend": "cd frontend && NODE_ENV=development yarn",
+    "postinstall": "yarn install:backend && yarn install:frontend",
+    "build:backend": "cd backend && yarn build",
+    "build:frontend": "cd frontend && yarn build",
     "build": "yarn build:backend && yarn build:frontend",
     "start:backend": "cd backend && yarn start",
     "start:frontend": "cd frontend && yarn start",
