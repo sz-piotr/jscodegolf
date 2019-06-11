@@ -7,16 +7,16 @@ export interface ScoresProps {
 
 export const Scores = ({ scores }: ScoresProps) => (
   <>
-    <ol className="scores">
+    <ol>
       {scores && scores.map((entry, index) => (
-        <li className="scores-entry" key={index}>
-          <span className="scores-name">{entry.player} </span>
-          <span className="scores-score">({entry.score})</span>
+        <li key={index}>
+          <span>{entry.player} </span>
+          <span>({entry.score})</span>
         </li>
       ))}
     </ol>
     {scores && scores.length === 0 && (
-      <div className="scores-empty">There are no scores</div>
+      <div>There are no scores</div>
     )}
   </>
 )

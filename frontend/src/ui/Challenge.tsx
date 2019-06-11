@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState, FormEvent } from 'react'
 import { Scores } from './Scores'
 import { submitSolution, ApiChallenge, ApiScore, getScores } from './api'
-import { execute } from './execute';
+import { execute } from './execute'
+import styled from 'styled-components'
 
 export interface ChallengeProps {
   challenge: ApiChallenge,
@@ -67,23 +68,54 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   }, [value])
 
   return (
-    <div className="challenge">
-      <div className="challenge-description">{challenge.description}</div>
+    <div>
+      <Description>{challenge.description}</Description>
       <form onSubmit={onSubmit}>
-        <input
-          className="challenge-input"
+        <Input
           ref={ref}
           value={value}
           onChange={e => setValue(e.target.value)}
           disabled={pending}
         />
-        {error && <div className="challenge-error">{error}</div>}
-        {output && <div className="challenge-output">
-          <span>fn({challenge.example.map(x => JSON.stringify(x)).join(', ')}) = </span>
-          {output}
-        </div>}
+        {error && <ErrorDisplay>{error}</ErrorDisplay>}
+        {output && (
+          <OutputDisplay>
+            <span>fn({challenge.example.map(x => JSON.stringify(x)).join(', ')}) = </span>
+            {output}
+          </OutputDisplay>
+        )}
       </form>
       <Scores scores={scores} />
     </div>
   )
 }
+
+const Description = styled.div`
+  white-space: pre-line;
+  line-height: 1.4;
+`
+
+const Input = styled.input`
+  padding: 16px;
+  width: 100%;
+  margin-top: 1em;
+  background-color: #222;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  outline: none;
+`
+
+const ErrorDisplay = styled.div`
+  color: #FC3939;
+  font-weight: bold;
+  margin-top: 8px;
+  white-space: pre-line;
+`
+
+const OutputDisplay = styled.div`
+  color: #394EFC;
+  font-weight: bold;
+  margin-top: 8px;
+  white-space: pre-line;
+`

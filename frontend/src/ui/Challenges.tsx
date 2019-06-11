@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import cx from 'classnames'
 import { useAsync } from './hooks'
 import { getChallenges } from './api'
 import { Challenge } from './Challenge'
+import styled, { css } from 'styled-components'
 
 export interface ChallengesProps {
   shouldFocus: boolean
@@ -14,18 +14,63 @@ export function Challenges ({ shouldFocus }: ChallengesProps) {
   const challenge = challenges && challenges.find(({ id }) => id === selected)
 
   return (
-    <div className="challenges">
-      <ul className="challenges-list">
+    <Container>
+      <List>
         {challenges && challenges.map(challenge => (
-          <li
-            className={cx('challenges-item', challenge.id === selected && 'selected')}
-            key={challenge.id}
-          >
-            <button onClick={() => setSelected(challenge.id)}>{challenge.title}</button>
-          </li>
+          <Item selected={challenge.id === selected} key={challenge.id}>
+            <Button onClick={() => setSelected(challenge.id)}>
+              {challenge.title}
+            </Button>
+          </Item>
         ))}
-      </ul>
+      </List>
       {challenge && <Challenge challenge={challenge} shouldFocus={shouldFocus} />}
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: 200px 1fr;
+
+  @media only screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-gap: 16px;
+  }
+`
+
+const List = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  @media only screen and (max-width: 600px) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ccc;
+  }
+`
+
+const Item = styled.li<{ selected: boolean }>`
+  margin-bottom: 0.1rem;
+  padding: 4px 0;
+
+  ${({ selected }) => selected && css`
+    background-color: #ffd400;
+  `}
+`
+
+const Button = styled.button`
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+`
