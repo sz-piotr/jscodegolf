@@ -3,6 +3,7 @@ import { Scores } from './Scores'
 import { submitSolution, ApiChallenge, ApiScore, getScores } from './api'
 import { execute } from './execute'
 import styled from 'styled-components'
+import { TestCases } from './TestCases';
 
 export interface ChallengeProps {
   challenge: ApiChallenge,
@@ -14,7 +15,6 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   const [value, setValue] = useState('')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  const [output, setOutput] = useState('')
 
   const [scores, setScores] = useState<ApiScore[] | undefined>(undefined)
 
@@ -55,21 +55,10 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
     }
   }
 
-  useEffect(() => {
-    setError('')
-    setOutput('')
-    if (value !== '') {
-      try {
-        setOutput(JSON.stringify(execute(value, challenge.example)))
-      } catch (err) {
-        setError(err.message)
-      }
-    }
-  }, [value])
-
   return (
     <div>
       <Description>{challenge.description}</Description>
+      <TestCases input={value} tests={challenge.tests} />
       <form onSubmit={onSubmit}>
         <Input
           ref={ref}
@@ -78,12 +67,6 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
           disabled={pending}
         />
         {error && <ErrorDisplay>{error}</ErrorDisplay>}
-        {output && (
-          <OutputDisplay>
-            <span>fn({challenge.example.map(x => JSON.stringify(x)).join(', ')}) = </span>
-            {output}
-          </OutputDisplay>
-        )}
       </form>
       <Scores scores={scores} />
     </div>

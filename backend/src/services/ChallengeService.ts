@@ -1,14 +1,8 @@
 import Knex from 'knex'
 import { challenges } from '../challenges'
-import { NotFound } from '../util/errors';
-import { SolutionCheckerService } from './SolutionCheckerService';
-
-export interface ApiChallenge {
-  id: string
-  title: string
-  description: string
-  example: any[],
-}
+import { NotFound } from '../util/errors'
+import { SolutionCheckerService } from './SolutionCheckerService'
+import { Challenge } from 'src/challenges/Challenge'
 
 export interface ApiScore {
   player: string
@@ -19,18 +13,14 @@ export interface ApiScore {
 export class ChallengeService {
   constructor(private database: Knex, private checker: SolutionCheckerService) { }
 
-  getChallenges(): ApiChallenge[] {
-    return challenges.map(challenge => ({
-      id: challenge.id,
-      title: challenge.title,
-      description: challenge.description,
-      example: challenge.tests[0].args,
-    }))
+  getChallenges(): Challenge[] {
+    return challenges
   }
 
   async getScores(challenge: string): Promise<ApiScore[]> {
     return this.database
-      .select('t.player', 't.score', 't.time')
+      .select('t.player', 't.score')
+      .min('t.time as time')
       .from(
         this.database
           .select('player')
@@ -46,6 +36,7 @@ export class ChallengeService {
           .andOn('t.score', 'm.score')
       })
       .where('challenge', challenge)
+      .groupBy('t.player', 't.score')
   }
 
   async addScore(challengeId: string, player: string, solution: string) {

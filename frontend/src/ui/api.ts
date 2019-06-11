@@ -1,9 +1,15 @@
 export interface ApiChallenge {
-  id: string,
-  title: string,
-  description: string,
-  example: any[],
+  id: string
+  title: string
+  description: string
+  tests: TestCase[]
 }
+
+export interface TestCase {
+  args: any[],
+  expected: any,
+}
+
 
 export interface ApiScore {
   player: string
