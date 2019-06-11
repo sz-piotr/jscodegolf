@@ -7,9 +7,7 @@ export type ExecutionResult
 export function execute(code: string, tests: TestCase[]) {
   return tests.map((test): ExecutionResult => {
     try {
-      const fn = eval(code)
-      const value = fn(...test.args)
-      console.log(value, test.expected)
+      const value = eval(`(${code})(...test.args)`)
       if (!deepEqual(value, test.expected)) {
         throw new Error('Invalid return value')
       }

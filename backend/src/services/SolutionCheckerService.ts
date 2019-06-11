@@ -9,19 +9,28 @@ export class SolutionCheckerService {
 
 function checkTestCase(code: string, test: TestCase): boolean {
   const result = executeSolution(code, test.args)
-  return compareResults(result, test.expected)
+  console.log(test.args, result, test.expected)
+  return deepEqual(result, test.expected)
 }
 
-function compareResults(actual: any, expected: any): boolean {
-  // TODO: implement this
-  return true
+function deepEqual (value: any, expected: any): boolean {
+  if (value === expected) {
+    return true
+  }
+  if (Array.isArray(expected)) {
+    if (!Array.isArray(value) || expected.length !== value.length) {
+      return false
+    }
+    return expected.every((x, i) => deepEqual(value[i], x))
+  }
+  return false
 }
 
 function executeSolution(code: string, args: any[]): any {
   const sandbox = { result: undefined, args };
   vm.createContext(sandbox);
 
-  vm.runInContext(`result = (${code})(args)`, sandbox);
+  vm.runInContext(`result = (${code})(...args)`, sandbox);
 
   return sandbox.result
 }
