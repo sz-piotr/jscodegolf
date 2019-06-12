@@ -9,7 +9,7 @@ export function execute(code: string, tests: TestCase[]) {
     try {
       const value = eval(`(${code})(...test.args)`)
       if (!deepEqual(value, test.expected)) {
-        throw new Error('Invalid return value')
+        throw new Error(`Invalid return value: ${JSON.stringify(value)}`)
       }
       return { type: 'PASS' }
     } catch (e) {
@@ -18,7 +18,7 @@ export function execute(code: string, tests: TestCase[]) {
   })
 }
 
-function deepEqual (value: any, expected: any): boolean {
+function deepEqual(value: any, expected: any): boolean {
   if (value === expected) {
     return true
   }
