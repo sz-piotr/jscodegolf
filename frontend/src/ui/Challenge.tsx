@@ -59,15 +59,16 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
     <div>
       <Description>{challenge.description}</Description>
       <TestCases input={value} tests={challenge.tests} />
-      <form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit}>
         <Input
           ref={ref}
           value={value}
           onChange={e => setValue(e.target.value)}
           disabled={pending}
         />
+        <Length>{value.length}</Length>
         {error && <ErrorDisplay>{error}</ErrorDisplay>}
-      </form>
+      </Form>
       <Scores scores={scores} />
     </div>
   )
@@ -76,6 +77,10 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
 const Description = styled.div`
   white-space: pre-line;
   line-height: 1.4;
+`
+
+const Form = styled.form`
+  position: relative;
 `
 
 const Input = styled.input`
@@ -87,6 +92,13 @@ const Input = styled.input`
   border-radius: 4px;
   color: white;
   outline: none;
+`
+
+const Length = styled.div`
+  position: absolute;
+  right: 0px;
+  bottom: -25px;
+  color: darkorange;
 `
 
 const ErrorDisplay = styled.div`
