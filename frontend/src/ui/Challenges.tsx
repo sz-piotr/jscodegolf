@@ -24,7 +24,13 @@ export function Challenges ({ shouldFocus }: ChallengesProps) {
           </Item>
         ))}
       </List>
-      {challenge && <Challenge challenge={challenge} shouldFocus={shouldFocus} />}
+      {challenge && (
+        <Challenge
+          key={challenge.id}
+          challenge={challenge}
+          shouldFocus={shouldFocus}
+        />
+      )}
     </Container>
   )
 }

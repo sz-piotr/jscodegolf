@@ -29,6 +29,9 @@ function execute ({ code, tests }: Submission) {
         return { type: 'FAIL', result }
       }
     } catch (e) {
+      if (e instanceof SyntaxError) {
+        return { type: 'ERROR', message: 'SyntaxError' }
+      }
       return { type: 'ERROR', message: '' + e }
     }
   })

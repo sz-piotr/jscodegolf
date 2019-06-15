@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, FormEvent } from 'react'
 import styled from 'styled-components'
 import { submitSolution, ApiChallenge, ApiScore, getScores } from '../domain/api'
 import { Scores } from './Scores'
-import { TestCases } from './TestCases'
+import { TestCases } from './tests/TestCases'
 
 export interface ChallengeProps {
   challenge: ApiChallenge,
@@ -57,7 +57,6 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   return (
     <div>
       <Description>{challenge.description}</Description>
-      <TestCases input={value} tests={challenge.tests} />
       <Form onSubmit={onSubmit}>
         <Input
           ref={ref}
@@ -68,6 +67,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
         <Length>{value.length}</Length>
         {error && <ErrorDisplay>{error}</ErrorDisplay>}
       </Form>
+      <TestCases input={value} tests={challenge.tests} />
       <Scores scores={scores} />
     </div>
   )

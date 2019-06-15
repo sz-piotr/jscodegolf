@@ -23,11 +23,3 @@ export function useAsync<T> (execute: () => Promise<T>, deps: readonly any[]): [
 
   return [value, error]
 }
-
-export function useLastNotUndefined <T> (value: T): T {
-  const last = useRef(value)
-  if (value !== undefined && last.current !== value) {
-    last.current = value
-  }
-  return last.current
-}
