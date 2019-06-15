@@ -22,11 +22,16 @@ export async function execute(code: string, tests: TestCase[]) {
     return tests.map(() => NO_INPUT_ERROR)
   }
 
-  const worker = new Worker()
+  const worker = await startWorker()
   worker.postMessage({ code, tests })
+
   return Promise.race([
     new Promise<TestResult[]>(resolve => {
-      worker.addEventListener("message", (event) => resolve(event.data))
+      function onMessage (event: MessageEvent) {
+        resolve(event.data)
+        worker.removeEventListener('message', onMessage)
+      }
+      worker.addEventListener('message', onMessage)
     }),
     new Promise<TestResult[]>(resolve => {
       setTimeout(() => {
@@ -35,4 +40,15 @@ export async function execute(code: string, tests: TestCase[]) {
       }, TIMEOUT_MS)
     }),
   ])
+}
+
+async function startWorker () {
+  const worker = new Worker()
+  return new Promise<Worker>(resolve => {
+    function onMessage () {
+      resolve(worker)
+      worker.removeEventListener('message', onMessage)
+    }
+    worker.addEventListener('message', onMessage)
+  })
 }

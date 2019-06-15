@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const OfflinePlugin = require('offline-plugin')
 
 module.exports = {
   entry: './src/index.tsx',
@@ -50,7 +51,8 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'
-    })
+    }),
+    new OfflinePlugin(), // MUST BE LAST
   ],
   devServer: {
     historyApiFallback: true,

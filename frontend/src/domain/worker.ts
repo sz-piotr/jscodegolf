@@ -5,6 +5,8 @@ declare function nonStrictEval (code: string): any
 
 const ctx: Worker = self as any
 
+ctx.postMessage('STARTED')
+
 ctx.addEventListener("message", (event) => {
   const result = execute(event.data)
   ctx.postMessage(result)
