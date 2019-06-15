@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export function useAsync<T> (execute: () => Promise<T>, deps: readonly any[]): [T | undefined, any] {
   const [value, setValue] = useState<T | undefined>(undefined)
   const [error, setError] = useState<any>(undefined)
+  const nonce = useRef(0)
 
   useEffect(() => {
+    const executionId = ++nonce.current
     execute().then(
-      // This prevents async effects finishing after the component was
-      // unmounted from generating warnings
-      result => result !== undefined && setValue(result),
+      result => {
+        if (nonce.current === executionId) {
+          setValue(result)
+        }
+      },
       setError,
     )
-    return () => setValue(undefined)
+    return () => {
+      setValue(undefined)
+      nonce.current++
+    }
   }, deps)
 
   return [value, error]

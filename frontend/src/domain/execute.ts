@@ -12,7 +12,16 @@ const TIMEOUT_ERROR = {
   message: `Timeout: Execution exceeded ${TIMEOUT_MS}ms`,
 }
 
+const NO_INPUT_ERROR = {
+  type: 'ERROR' as const,
+  message: `No input provided`,
+}
+
 export async function execute(code: string, tests: TestCase[]) {
+  if (code === '') {
+    return tests.map(() => NO_INPUT_ERROR)
+  }
+
   const worker = new Worker()
   worker.postMessage({ code, tests })
   return Promise.race([
