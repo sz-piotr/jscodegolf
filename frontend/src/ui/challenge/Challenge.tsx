@@ -11,11 +11,10 @@ import { useChallenge } from './useChallenge'
 const executeDebounced = debounceAsync(execute, 200)
 
 export interface ChallengeProps {
-  challenge: ApiChallenge,
-  shouldFocus: boolean,
+  challenge: ApiChallenge
 }
 
-export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
+export const Challenge = ({ challenge }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState('')
   const [lastSubmitted, setLastSubmitted] = useState('')

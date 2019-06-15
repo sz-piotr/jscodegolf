@@ -5,9 +5,11 @@ import { Navbar } from './Navbar'
 
 export function App () {
   const [name, setName] = useState(() => localStorage.getItem('name') || '')
+  const [n, setN] = useState(0)
 
   function onLogin (newName: string) {
     setName(newName)
+    setN(n + 1)
     localStorage.setItem('name', newName)
   }
 
@@ -22,7 +24,7 @@ export function App () {
     <>
       <Welcome name={name} onLogin={onLogin} />
       <Navbar name={name} onLogout={onLogout} />
-      <Challenges key={key} shouldFocus={!!name} />
+      <Challenges key={key + n} />
     </>
   )
 }

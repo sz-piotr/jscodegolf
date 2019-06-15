@@ -4,11 +4,7 @@ import { getChallenges } from '../domain/api'
 import { useAsync } from './hooks'
 import { Challenge } from './challenge/Challenge'
 
-export interface ChallengesProps {
-  shouldFocus: boolean
-}
-
-export function Challenges ({ shouldFocus }: ChallengesProps) {
+export function Challenges () {
   const [challenges, error] = useAsync(getChallenges, [])
   const [selectedId, setSelectedId] = useState(localStorage.getItem('challengeId') || '')
   const selected = challenges && (challenges.find(({ id }) => id === selectedId) || challenges[0])
@@ -33,7 +29,6 @@ export function Challenges ({ shouldFocus }: ChallengesProps) {
         <Challenge
           key={selected.id}
           challenge={selected}
-          shouldFocus={shouldFocus}
         />
       )}
     </Container>
