@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { getChallenges } from '../domain/api'
 import { useAsync } from './hooks'
@@ -10,24 +10,28 @@ export interface ChallengesProps {
 
 export function Challenges ({ shouldFocus }: ChallengesProps) {
   const [challenges] = useAsync(getChallenges, [])
-  const [selected, setSelected] = useState('introduction')
-  const challenge = challenges && challenges.find(({ id }) => id === selected)
+  const [selectedId, setSelectedId] = useState(localStorage.getItem('challengeId') || '')
+  const selected = challenges && (challenges.find(({ id }) => id === selectedId) || challenges[0])
+
+  useEffect(() => {
+    localStorage.setItem('challengeId', selectedId)
+  }, [selectedId])
 
   return (
     <Container>
       <List>
         {challenges && challenges.map(challenge => (
-          <Item selected={challenge.id === selected} key={challenge.id}>
-            <Button onClick={() => setSelected(challenge.id)}>
+          <Item selected={challenge.id === (selected && selected.id)} key={challenge.id}>
+            <Button onClick={() => setSelectedId(challenge.id)}>
               {challenge.title}
             </Button>
           </Item>
         ))}
       </List>
-      {challenge && (
+      {selected && (
         <Challenge
-          key={challenge.id}
-          challenge={challenge}
+          key={selected.id}
+          challenge={selected}
           shouldFocus={shouldFocus}
         />
       )}

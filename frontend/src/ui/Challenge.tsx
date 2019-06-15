@@ -76,6 +76,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
 const Description = styled.div`
   white-space: pre-line;
   line-height: 1.4;
+  margin-bottom: 16px;
 `
 
 const Form = styled.form`
@@ -83,9 +84,8 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-  padding: 16px;
+  padding: 16px 56px 16px 16px;
   width: 100%;
-  margin-top: 1em;
   background-color: #222;
   border: none;
   border-radius: 4px;
@@ -95,20 +95,14 @@ const Input = styled.input`
 
 const Length = styled.div`
   position: absolute;
-  right: 0px;
-  bottom: -25px;
-  color: darkorange;
+  right: 16px;
+  top: 15px;
+  color: #ffd400;
+  font-weight: bold;
 `
 
 const ErrorDisplay = styled.div`
   color: #FC3939;
-  font-weight: bold;
-  margin-top: 8px;
-  white-space: pre-line;
-`
-
-const OutputDisplay = styled.div`
-  color: #394EFC;
   font-weight: bold;
   margin-top: 8px;
   white-space: pre-line;
