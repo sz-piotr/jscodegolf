@@ -19,7 +19,7 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState('')
   const [lastSubmitted, setLastSubmitted] = useState('')
-  const { scores, submit, pending, error } = useChallenge(challenge.id)
+  const { scores, submit, pending, error } = useChallenge(challenge.id, value)
 
   const [results] = useAsync(
     () => executeDebounced(value, challenge.tests),

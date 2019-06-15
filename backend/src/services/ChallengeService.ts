@@ -56,7 +56,15 @@ export class ChallengeService {
       throw new NotFound()
     }
 
-    console.log(await this.getScore(challengeId, player))
+    const previousScore = await this.getScore(challengeId, player)
+    if (previousScore <= solution.length) {
+      return {
+        success: false,
+        error: previousScore === solution.length
+          ? 'You already submitted an equally good solution.'
+          : 'You already submitted a better solution.',
+      }
+    }
 
     const isValid = this.checker.check(solution, challenge);
     if (!isValid) {

@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react'
 import { ApiScore, getScores, submitSolution } from 'src/domain/api'
 
-export function useChallenge (id: string) {
+export function useChallenge (id: string, value: string) {
   const [scores, setScores] = useState<ApiScore[] | undefined>(undefined)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (error !== '') {
+      setError('')
+    }
+  }, [value])
 
   useEffect(() => {
     if (scores !== undefined) {
