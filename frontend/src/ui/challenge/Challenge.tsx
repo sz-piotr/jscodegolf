@@ -7,6 +7,7 @@ import { useAsync } from '../hooks'
 import { execute } from 'src/domain/execute'
 import { debounceAsync } from 'src/util/debounceAsync'
 import { useChallenge } from './useChallenge'
+import { Confetti, ConfettiElement } from './Confetti'
 
 const executeDebounced = debounceAsync(execute, 200)
 
@@ -16,6 +17,7 @@ export interface ChallengeProps {
 
 export const Challenge = ({ challenge }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
+  const confetti = useRef<ConfettiElement>(null)
   const [value, setValue] = useState('')
   const [lastSubmitted, setLastSubmitted] = useState('')
   const { scores, submit, pending, error } = useChallenge(challenge.id, value)
@@ -41,7 +43,9 @@ export const Challenge = ({ challenge }: ChallengeProps) => {
       return
     }
     setLastSubmitted(value)
-    await submit(value)
+    if (await submit(value)) {
+      confetti.current && confetti.current.emitParticles()
+    }
     ref.current && ref.current.focus()
   }
 
@@ -63,6 +67,7 @@ export const Challenge = ({ challenge }: ChallengeProps) => {
       </Form>
       <TestCases results={results} tests={challenge.tests} />
       <Scores scores={scores} />
+      <Confetti ref={confetti} />
     </div>
   )
 }

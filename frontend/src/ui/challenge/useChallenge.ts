@@ -29,8 +29,10 @@ export function useChallenge (id: string, value: string) {
       const result = await submitSolution(id, value)
       if (result.success) {
         setScores(result.scores)
+        return true
       } else {
         setError(result.error)
+        return false
       }
     } finally {
       setPending(false)
