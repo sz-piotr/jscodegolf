@@ -9,7 +9,7 @@ export interface ChallengesProps {
 }
 
 export function Challenges ({ shouldFocus }: ChallengesProps) {
-  const [challenges] = useAsync(getChallenges, [])
+  const [challenges, error] = useAsync(getChallenges, [])
   const [selectedId, setSelectedId] = useState(localStorage.getItem('challengeId') || '')
   const selected = challenges && (challenges.find(({ id }) => id === selectedId) || challenges[0])
 
@@ -28,6 +28,7 @@ export function Challenges ({ shouldFocus }: ChallengesProps) {
           </Item>
         ))}
       </List>
+      {error && <div>Error fetching challenges</div>}
       {selected && (
         <Challenge
           key={selected.id}
