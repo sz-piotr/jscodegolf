@@ -2,13 +2,13 @@ import React, { useState, FormEvent, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
 export interface WelcomeProps {
-  name: string | null
+  name: string
   onLogin: (name: string) => void
 }
 
 export function Welcome(props: WelcomeProps) {
   const visible = !props.name
-  const [name, setName] = useState(props.name || '')
+  const [name, setName] = useState(props.name)
 
   useEffect(() => {
     if (visible) {
@@ -44,6 +44,7 @@ export function Welcome(props: WelcomeProps) {
 }
 
 const Container = styled.div<{ hidden: boolean }>`
+  z-index: 1000;
   opacity: 1;
   background-color: white;
   position: fixed;

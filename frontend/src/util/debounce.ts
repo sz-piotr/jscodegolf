@@ -1,5 +1,5 @@
 // Taken from https://davidwalsh.name/javascript-debounce-function
-export function debounceAsync <T, A extends any[]>(
+export function debounce <T, A extends any[]>(
   func: (this: T, ...args: A) => void,
   waitMs: number,
   immediate: boolean,

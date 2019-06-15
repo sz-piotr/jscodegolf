@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { getChallenges } from '../domain/api'
 import { useAsync } from './hooks'
-import { Challenge } from './Challenge'
+import { Challenge } from './challenge/Challenge'
 
 export interface ChallengesProps {
   shouldFocus: boolean

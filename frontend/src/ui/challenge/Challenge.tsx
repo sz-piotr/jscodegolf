@@ -1,8 +1,14 @@
 import React, { useRef, useEffect, useState, FormEvent } from 'react'
 import styled from 'styled-components'
-import { submitSolution, ApiChallenge, ApiScore, getScores } from '../domain/api'
-import { Scores } from './Scores'
-import { TestCases } from './tests/TestCases'
+import { ApiChallenge } from '../../domain/api'
+import { Scores } from '../Scores'
+import { TestCases } from '../tests/TestCases'
+import { useAsync } from '../hooks'
+import { execute } from 'src/domain/execute'
+import { debounceAsync } from 'src/util/debounceAsync'
+import { useChallenge } from './useChallenge'
+
+const executeDebounced = debounceAsync(execute, 200)
 
 export interface ChallengeProps {
   challenge: ApiChallenge,
@@ -12,46 +18,32 @@ export interface ChallengeProps {
 export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState('')
-  const [pending, setPending] = useState(false)
-  const [error, setError] = useState('')
+  const [lastSubmitted, setLastSubmitted] = useState('')
+  const { scores, submit, pending, error } = useChallenge(challenge.id)
 
-  const [scores, setScores] = useState<ApiScore[] | undefined>(undefined)
+  const [results] = useAsync(
+    () => executeDebounced(value, challenge.tests),
+    [value, challenge.tests],
+  )
 
   useEffect(() => {
     if (ref.current) {
+      ref.current.focus()
       ref.current.spellcheck = false
     }
   }, [])
 
-  useEffect(() => {
-    getScores(challenge.id).then(setScores)
-    return () => setScores(undefined)
-  }, [challenge.id])
-
-  useEffect(() => {
-    if (challenge && shouldFocus && ref.current) {
-      ref.current.focus()
-      setValue('')
-      setError('')
-    }
-  }, [challenge, shouldFocus])
+  const shouldSubmit = !error && value !== lastSubmitted &&
+    results && results.every(x => x.type === 'PASS')
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
-    setPending(true)
-    try {
-      const result = await submitSolution(challenge.id, value)
-      if (result.success) {
-        setScores(result.scores)
-        setValue('')
-        setError('')
-      } else {
-        setError(result.error)
-      }
-    } finally {
-      setPending(false)
-      ref.current && ref.current.focus()
+    if (!shouldSubmit) {
+      return
     }
+    setLastSubmitted(value)
+    await submit(value)
+    ref.current && ref.current.focus()
   }
 
   return (
@@ -65,9 +57,12 @@ export const Challenge = ({ challenge, shouldFocus }: ChallengeProps) => {
           disabled={pending}
         />
         <Length>{value.length}</Length>
+        {shouldSubmit &&
+          <ShouldSubmit>All green! Press Enter to submit.</ShouldSubmit>
+        }
         {error && <ErrorDisplay>{error}</ErrorDisplay>}
       </Form>
-      <TestCases input={value} tests={challenge.tests} />
+      <TestCases results={results} tests={challenge.tests} />
       <Scores scores={scores} />
     </div>
   )
@@ -106,4 +101,10 @@ const ErrorDisplay = styled.div`
   font-weight: bold;
   margin-top: 8px;
   white-space: pre-line;
+`
+
+const ShouldSubmit = styled.div`
+  color: #60bb3a;
+  font-weight: bold;
+  margin-top: 8px;
 `

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, RefObject } from 'react'
 
 export function useAsync<T> (execute: () => Promise<T>, deps: readonly any[]): [T | undefined, any] {
   const [value, setValue] = useState<T | undefined>(undefined)

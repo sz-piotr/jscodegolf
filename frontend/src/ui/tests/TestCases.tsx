@@ -1,23 +1,18 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { TestCase } from 'src/domain/api'
-import { execute } from 'src/domain/execute'
+import { TestResult } from 'src/domain/execute'
 import { groupResults } from 'src/domain/groupResults'
-import { useAsync } from '../hooks'
-import { debounceAsync } from 'src/util/debounceAsync'
 import { ResultGroupView } from './ResultGroupView'
 
 export interface TestCasesProps {
   tests: TestCase[]
-  input: string
+  results?: TestResult[]
 }
 
-const executeDebounced = debounceAsync(execute, 200)
-
-export function TestCases({ tests, input }: TestCasesProps) {
-  const [rawResults] = useAsync(() => executeDebounced(input, tests), [input, tests])
-  const results = useLastNotUndefined(rawResults)
-  const groups = results && groupResults(tests, results)
+export function TestCases({ tests, results }: TestCasesProps) {
+  const latest = useLastNotUndefined(results)
+  const groups = latest && groupResults(tests, latest)
 
   return (
     <Groups>

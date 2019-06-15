@@ -36,7 +36,18 @@ export class ChallengeService {
           .andOn('t.score', 'm.score')
       })
       .where('challenge', challenge)
+      .orderBy('t.score', 'asc')
       .groupBy('t.player', 't.score')
+  }
+
+  async getScore (challenge: string, player: string): Promise<Number> {
+    const result = await this.database
+      .first('player')
+      .min('score as score')
+      .from('scores')
+      .where({ challenge, player })
+      .groupBy('player')
+    return result && result.score || Infinity
   }
 
   async addScore(challengeId: string, player: string, solution: string) {
@@ -44,6 +55,8 @@ export class ChallengeService {
     if (!challenge) {
       throw new NotFound()
     }
+
+    console.log(await this.getScore(challengeId, player))
 
     const isValid = this.checker.check(solution, challenge);
     if (!isValid) {
