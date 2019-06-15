@@ -75,6 +75,14 @@ const Badge = styled.span<{ pass: boolean }>`
 const CollapseButton = styled.button`
   padding: 0;
   margin-left: 16px;
+  background: none;
+  border: none;
+  outline: none;
+  color: #777;
+  text-decoration: underline;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
 `
 
 const Items = styled.ul`
@@ -87,4 +95,5 @@ const Item = styled.li`
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto auto;
+  align-items: center;
 `
