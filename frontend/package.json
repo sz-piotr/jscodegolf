@@ -5,13 +5,14 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --progress",
     "prebuild": "rm -rf ./dist",
-    "build": "webpack --mode production --progress",
+    "build": "NODE_ENV=production webpack --mode production --progress",
     "lint": "tslint -p tsconfig.json \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
     "travis": "yarn lint && yarn test"
   },
   "dependencies": {
     "@types/react": "^16.8.12",
     "@types/react-dom": "^16.8.3",
+    "dayjs": "^1.8.14",
     "evel": "^0.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

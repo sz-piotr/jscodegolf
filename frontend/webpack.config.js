@@ -3,6 +3,22 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const OfflinePlugin = require('offline-plugin')
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+const plugins = [
+  new MiniCssExtractPlugin({
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css',
+  }),
+  new HtmlWebpackPlugin({
+    template: 'src/index.html'
+  }),
+]
+
+if (isProduction) {
+  plugins.push(new OfflinePlugin()) // MUST BE LAST
+}
+
 module.exports = {
   entry: './src/index.tsx',
   output: {
@@ -44,16 +60,7 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: '[id].[hash].css',
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/index.html'
-    }),
-    new OfflinePlugin(), // MUST BE LAST
-  ],
+  plugins,
   devServer: {
     historyApiFallback: true,
     proxy: {

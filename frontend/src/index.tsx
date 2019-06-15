@@ -6,8 +6,9 @@ import { render } from 'react-dom'
 
 import { App } from './ui/App'
 
-import OfflinePluginRuntime from 'offline-plugin/runtime'
-OfflinePluginRuntime.install()
+if (process.env.NODE_ENV === 'production') {
+  require('offline-plugin/runtime').install()
+}
 
 render(
   <App />,

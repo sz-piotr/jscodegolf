@@ -37,6 +37,7 @@ export class ChallengeService {
       })
       .where('challenge', challenge)
       .orderBy('t.score', 'asc')
+      .orderBy('time', 'asc')
       .groupBy('t.player', 't.score')
   }
 
