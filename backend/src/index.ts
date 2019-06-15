@@ -24,6 +24,16 @@ async function start() {
   const services = setup(database)
 
   const app = express()
+
+  app.enable('trust proxy')
+  app.use(function (req, res, next) {
+    if (req.secure || req.hostname === 'localhost') {
+      next()
+    } else {
+      res.redirect('https://' + req.headers.host + req.url)
+    }
+  })
+
   app.use(bodyParser.json())
   app.use('/', router(services))
   app.use('/', express.static(FRONTEND_FILES))
