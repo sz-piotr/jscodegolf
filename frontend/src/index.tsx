@@ -5,7 +5,7 @@ import React from 'react'
 import { render } from 'react-dom'
 
 import { App } from './ui/App'
-import MyWorker from 'worker-loader!./worker'
+import MyWorker from 'worker-loader!./domain/worker'
 
 render(
   <App />,

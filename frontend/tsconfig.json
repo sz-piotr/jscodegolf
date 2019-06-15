@@ -8,6 +8,7 @@
     "target": "es6",
     "jsx": "react",
     "lib": [
+      "webworker",
       "esnext",
       "dom"
     ],

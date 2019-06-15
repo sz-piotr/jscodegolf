@@ -1,5 +1,5 @@
 import React from 'react'
-import { ApiScore } from './api'
+import { ApiScore } from '../domain/api'
 
 export interface ScoresProps {
   scores?: ApiScore[]

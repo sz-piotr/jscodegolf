@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState, FormEvent } from 'react'
-import { Scores } from './Scores'
-import { submitSolution, ApiChallenge, ApiScore, getScores } from './api'
-import { execute } from './execute'
 import styled from 'styled-components'
-import { TestCases } from './TestCases';
+import { submitSolution, ApiChallenge, ApiScore, getScores } from '../domain/api'
+import { Scores } from './Scores'
+import { TestCases } from './TestCases'
 
 export interface ChallengeProps {
   challenge: ApiChallenge,

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { TestCase } from './api'
-import { ExecutionResult, execute } from './execute';
-import { EROFS } from 'constants';
+import { TestCase } from '../domain/api'
+import { ExecutionResult, execute } from '../domain/execute'
 
 export interface TestCasesProps {
   tests: TestCase[]

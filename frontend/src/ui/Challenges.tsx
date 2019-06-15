@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useAsync } from './hooks'
-import { getChallenges } from './api'
-import { Challenge } from './Challenge'
 import styled, { css } from 'styled-components'
+import { getChallenges } from '../domain/api'
+import { useAsync } from './hooks'
+import { Challenge } from './Challenge'
 
 export interface ChallengesProps {
   shouldFocus: boolean
