@@ -3,14 +3,17 @@ import styled from 'styled-components'
 import { TestCase } from '../domain/api'
 import { execute } from '../domain/execute'
 import { useAsync, useLastNotUndefined } from './hooks'
+import { debounceAsync } from 'src/util/debounceAsync'
 
 export interface TestCasesProps {
   tests: TestCase[]
   input: string
 }
 
+const executeDebounced = debounceAsync(execute, 200)
+
 export function TestCases({ tests, input }: TestCasesProps) {
-  const [rawResult] = useAsync(() => execute(input, tests), [input, tests])
+  const [rawResult] = useAsync(() => executeDebounced(input, tests), [input, tests])
   const result = useLastNotUndefined(rawResult)
 
   const successes = result ? result.filter(x => x.type === 'PASS').length : '?'

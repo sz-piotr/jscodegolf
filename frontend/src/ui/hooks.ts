@@ -6,30 +6,28 @@ export function useAsync<T> (execute: () => Promise<T>, deps: readonly any[]): [
   const nonce = useRef(0)
 
   useEffect(() => {
+    if (value !== undefined) {
+      setValue(undefined)
+    }
+    if (error !== undefined) {
+      setError(undefined)
+    }
+
     const executionId = ++nonce.current
     execute().then(
-      result => {
-        if (nonce.current === executionId) {
-          setValue(result)
-        }
-      },
+      result => nonce.current === executionId && setValue(result),
       setError,
     )
-    return () => {
-      setValue(undefined)
-      nonce.current++
-    }
+    return () => { ++nonce.current }
   }, deps)
 
   return [value, error]
 }
 
 export function useLastNotUndefined <T> (value: T): T {
-  const [last, setLast] = useState<T>(value)
-  useEffect(() => {
-    if (value !== undefined && last !== value) {
-      setLast(value)
-    }
-  }, [value])
-  return last
+  const last = useRef(value)
+  if (value !== undefined && last.current !== value) {
+    last.current = value
+  }
+  return last.current
 }
