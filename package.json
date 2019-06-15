@@ -1,10 +1,10 @@
 {
   "name": "jscodegolf",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/sz-piotr/jscodegolf",
-  "author": "Marik-D <maretskii@gmail.com>",
-  "license": "MIT",
+  "engines": {
+    "node": "11.x"
+  },
   "scripts": {
     "install:backend": "cd backend && NODE_ENV=development yarn",
     "install:frontend": "cd frontend && NODE_ENV=development yarn",
