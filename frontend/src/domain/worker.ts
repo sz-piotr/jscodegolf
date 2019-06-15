@@ -3,11 +3,46 @@ import nonStrictEvalUrl from 'file-loader!./eval.js'
 importScripts(nonStrictEvalUrl)
 declare function nonStrictEval (code: string): any
 
-// Worker.ts
-const ctx: Worker = self as any;
+const ctx: Worker = self as any
 
-// Post data to parent thread
-ctx.postMessage(nonStrictEval('b=3; b'));
+ctx.addEventListener("message", (event) => {
+  const result = execute(event.data)
+  ctx.postMessage(result)
+})
 
-// Respond to message from parent thread
-ctx.addEventListener("message", (event) => console.log(event));
+interface Submission {
+  code: string,
+  tests: {
+    args: any[],
+    expected: any,
+  }[]
+}
+
+function execute ({ code, tests }: Submission) {
+  return tests.map(({ args, expected }) => {
+    const input = args.map(x => JSON.stringify(x)).join(', ')
+    try {
+      const result = nonStrictEval(`(${code})(${input})`)
+      if (deepEqual(result, expected)) {
+        return { type: 'PASS' }
+      } else {
+        return { type: 'FAIL', result }
+      }
+    } catch (e) {
+      return { type: 'ERROR', message: '' + e }
+    }
+  })
+}
+
+function deepEqual(value: any, expected: any): boolean {
+  if (value === expected) {
+    return true
+  }
+  if (Array.isArray(expected)) {
+    if (!Array.isArray(value) || expected.length !== value.length) {
+      return false
+    }
+    return expected.every((x, i) => deepEqual(value[i], x))
+  }
+  return false
+}

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { TestCase } from '../domain/api'
-import { ExecutionResult, execute } from '../domain/execute'
+import { execute } from '../domain/execute'
+import { useAsync, useLastNotUndefined } from './hooks'
 
 export interface TestCasesProps {
   tests: TestCase[]
@@ -9,77 +10,34 @@ export interface TestCasesProps {
 }
 
 export function TestCases({ tests, input }: TestCasesProps) {
-  const [output, setOutput] = useState<ExecutionResult | undefined>(undefined)
+  const [rawResult] = useAsync(() => execute(input, tests), [input, tests])
+  const result = useLastNotUndefined(rawResult)
 
-  useEffect(() => {
-    setOutput(execute(input, tests))
-  }, [tests, input])
+  const successes = result ? result.filter(x => x.type === 'PASS').length : '?'
 
-  if (!output) return null
-
-  if (output.type === 'PASS') {
-    return (
-      <>
-        <Successes>
-          {tests.length}/{tests.length} checks successful
-        </Successes>
-        <Items>
-          {tests.map((testCase, i) => {
-            return (
-              <li key={i}>
-                <Pass>PASS</Pass>
-                <span>{formatTestCase(testCase)}</span>
-              </li>
-            )
-          })}
-        </Items>
-      </>
-    )
-  } else if (output.type === 'ERROR') {
-    return (
-      <>
-        <Successes>
-          {0}/{tests.length} checks successful
-        </Successes>
-        <Items>
-          {tests.map((testCase, i) => {
-            return (
-              <li key={i}>
-                <Fail>FAIL</Fail>
-                <span>{formatTestCase(testCase)}</span>
-              </li>
-            )
-          })}
-        </Items>
-        <Error>{output.error}</Error>
-      </>
-    )
-  } else {
-    const successes = output.results.filter(x => x.type === 'PASS').length
-
-    return (
-      <>
-        <Successes>
-          {successes}/{tests.length} checks successful
-        </Successes>
-        <Items>
-          {tests.map((testCase, i) => {
-            const out = output.results[i]
-            return (
-              <li key={i}>
-                {out && out.type === 'FAIL' && <Fail>FAIL</Fail>}
-                {out && out.type === 'PASS' && <Pass>PASS</Pass>}
-                {!out && <Pass>????</Pass>}
-                <span>{formatTestCase(testCase)}</span>
-                {out && out.type === 'FAIL' && <Error>{out.error}</Error>}
-              </li>
-            )
-          })}
-        </Items>
-      </>
-    )
-  }
-  return null
+  return (
+    <>
+      <Successes>
+        {successes}/{tests.length} checks successful
+      </Successes>
+      <Items>
+        {tests.map((testCase, i) => {
+          const out = result && result[i]
+          return (
+            <li key={i}>
+              {out && out.type === 'FAIL' && <Fail>FAIL</Fail>}
+              {out && out.type === 'ERROR' && <Fail>ERROR</Fail>}
+              {out && out.type === 'PASS' && <Pass>PASS</Pass>}
+              {!out && <Fail>????</Fail>}
+              <span>{formatTestCase(testCase)}</span>
+              {out && out.type === 'FAIL' && <Error>{JSON.stringify(out.result)}</Error>}
+              {out && out.type === 'ERROR' && <Error>{out.message}</Error>}
+            </li>
+          )
+        })}
+      </Items>
+    </>
+  )
 }
 
 function formatTestCase({ args, expected }: TestCase) {

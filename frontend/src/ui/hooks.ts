@@ -16,3 +16,13 @@ export function useAsync<T> (execute: () => Promise<T>, deps: readonly any[]): [
 
   return [value, error]
 }
+
+export function useLastNotUndefined <T> (value: T): T {
+  const [last, setLast] = useState<T>(value)
+  useEffect(() => {
+    if (value !== undefined && last !== value) {
+      setLast(value)
+    }
+  }, [value])
+  return last
+}
