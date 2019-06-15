@@ -8,9 +8,19 @@ export class SolutionCheckerService {
 }
 
 function checkTestCase(code: string, test: TestCase): boolean {
-  const result = executeSolution(code, test.args)
-  console.log(test.args, result, test.expected)
-  return deepEqual(result, test.expected)
+  try {
+    return deepEqual(executeSolution(code, test.args), test.expected)
+  } catch {
+    return false
+  }
+}
+
+function executeSolution(code: string, args: any[]): any {
+  return evaluate(`(${code})(${args.map(x => JSON.stringify(x)).join(',')})`)
+}
+
+function evaluate (code: string) {
+  return vm.runInNewContext(code, {}, { timeout: 50 })
 }
 
 function deepEqual (value: any, expected: any): boolean {
@@ -24,13 +34,4 @@ function deepEqual (value: any, expected: any): boolean {
     return expected.every((x, i) => deepEqual(value[i], x))
   }
   return false
-}
-
-function executeSolution(code: string, args: any[]): any {
-  const sandbox = { result: undefined, args };
-  vm.createContext(sandbox);
-
-  vm.runInContext(`result = (${code})(...args)`, sandbox);
-
-  return sandbox.result
 }
