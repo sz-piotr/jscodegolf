@@ -57,6 +57,13 @@ export class ChallengeService {
       throw new NotFound()
     }
 
+    if (solution.length > 1000) {
+      return {
+        success: false,
+        error: 'Your solution is too long.',
+      }
+    }
+
     const previousScore = await this.getScore(challengeId, player)
     if (previousScore <= solution.length) {
       return {
