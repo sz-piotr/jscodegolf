@@ -16,7 +16,7 @@ export function Challenges () {
 
   return (
     <Container>
-      {!challenges && <ChallengesLoader />}
+      {!challenges && !error && <ChallengesLoader />}
       <List>
         {challenges && challenges.map(challenge => (
           <Item selected={challenge.id === (selected && selected.id)} key={challenge.id}>

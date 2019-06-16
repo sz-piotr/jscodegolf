@@ -1,8 +1,8 @@
 import { Challenge } from './Challenge'
 
-export const hex2rgb: Challenge = {
-  id: 'hex2rgb',
-  title: 'HEX 2 RGB',
+export const colors: Challenge = {
+  id: 'colors',
+  title: 'Colors',
   description: 'Write a function that transforms hex encoded colors to rgb ' +
     'encoded colors. It should support both #FFF and #FFFFFF.',
   tests: [
@@ -26,8 +26,3 @@ export const hex2rgb: Challenge = {
     ([a, b]) => ({ type: 'FUNCTION', args: [a], expected: b })
   )
 }
-
-
-/*
-assertType(result, 'function');
-*/

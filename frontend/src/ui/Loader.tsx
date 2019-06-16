@@ -27,8 +27,8 @@ export function Loader({ className }: { className?: string }) {
     const interval2 = setInterval(() => setDots(dots => (dots + 1) % 4), 500)
     return () => {
       clearTimeout(timeout)
-      setInterval(interval1)
-      setInterval(interval2)
+      clearInterval(interval1)
+      clearInterval(interval2)
     }
   }, [])
 
