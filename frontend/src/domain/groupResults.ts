@@ -1,5 +1,5 @@
 import { TestResult } from './execute'
-import { TestCase } from './api'
+import { TestCase } from './challenge'
 
 export interface ResultGroup {
   message: string,

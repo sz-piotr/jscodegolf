@@ -6,6 +6,7 @@ export const introduction: Challenge = {
   description: 'Write a function that returns true.',
   tests: [
     {
+      type: 'FUNCTION',
       args: [],
       expected: true,
     },

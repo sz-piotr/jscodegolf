@@ -1,16 +1,7 @@
-export function prettyPrint (value: any) {
-  try {
-    const x = JSON.parse(JSON.stringify(value))
-    return prettyPrintSafe(x)
-  } catch (e) {
-    if (/circular/.test(e && e.message)) {
-      return '<Circular>'
-    }
-    throw e
+export function prettyPrint (value: unknown, stack: any[] = []): string {
+  if (stack.includes(value)) {
+    return '<Circular>'
   }
-}
-
-function prettyPrintSafe (value: unknown): string {
   if (typeof value === 'string') {
     return JSON.stringify(value)
   }
@@ -21,13 +12,23 @@ function prettyPrintSafe (value: unknown): string {
     if (value === null) {
       return '' + value
     }
-    if (Array.isArray(value)) {
-      return `[${value.map(prettyPrintSafe).join(', ')}]`
+    if (value instanceof Date) {
+      return `Date(${value.toISOString()})`
     }
-    return `{ ${Object.entries(value).map(([key, value]) => {
-      const keyStr = /\w+/.test(key) ? key : JSON.stringify(key)
-      return `${keyStr}: ${prettyPrintSafe(value)}`
-    }).join(', ')} }`
+    if (Array.isArray(value)) {
+      stack.push(value)
+      const result = `[${value.map(x => prettyPrint(x, stack)).join(', ')}]`
+      stack.pop()
+      return result
+    } else {
+      stack.push(value)
+      const result = `{ ${Object.entries(value).map(([key, value]) => {
+        const keyStr = /\w+/.test(key) ? key : JSON.stringify(key)
+        return `${keyStr}: ${prettyPrint(value, stack)}`
+      }).join(', ')} }`
+      stack.pop()
+      return result
+    }
   }
   if (value === undefined) {
     return '' + value

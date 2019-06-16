@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, FormEvent } from 'react'
 import styled from 'styled-components'
-import { ApiChallenge } from '../../domain/api'
+import { ApiChallenge } from '../../domain/challenge'
 import { Scores } from '../Scores'
 import { TestCases } from '../tests/TestCases'
 import { useAsync } from '../hooks'

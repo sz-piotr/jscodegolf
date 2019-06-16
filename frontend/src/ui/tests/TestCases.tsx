@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
-import { TestCase } from 'src/domain/api'
+import { TestCase } from 'src/domain/challenge'
 import { TestResult } from 'src/domain/execute'
 import { groupResults } from 'src/domain/groupResults'
 import { ResultGroupView } from './ResultGroupView'

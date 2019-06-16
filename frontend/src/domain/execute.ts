@@ -1,4 +1,4 @@
-import { TestCase } from './api'
+import { TestCase } from './challenge'
 import Worker from 'worker-loader!./worker'
 
 export type TestResult

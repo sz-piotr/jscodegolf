@@ -1,15 +1,4 @@
-export interface ApiChallenge {
-  id: string
-  title: string
-  description: string
-  tests: TestCase[]
-}
-
-export interface TestCase {
-  args: any[],
-  expected: any,
-}
-
+import { ApiChallenge } from './challenge'
 
 export interface ApiScore {
   player: string

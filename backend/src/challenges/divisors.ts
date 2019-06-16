@@ -15,6 +15,6 @@ export const divisors: Challenge = {
     [1, [1]],
     [0, []],
   ].map(
-    ([a, b]) => ({ args: [a], expected: b })
+    ([a, b]) => ({ type: 'FUNCTION', args: [a], expected: b })
   )
 }

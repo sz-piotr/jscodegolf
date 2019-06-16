@@ -1,5 +1,5 @@
 import vm from 'vm'
-import { Challenge, TestCase } from "src/challenges/Challenge"
+import { Challenge, TestCase } from 'src/challenges/Challenge'
 
 export class SolutionCheckerService {
   check(code: string, challenge: Challenge): boolean {
@@ -9,6 +9,14 @@ export class SolutionCheckerService {
 
 function checkTestCase(code: string, test: TestCase): boolean {
   try {
+    if (test.type === 'REGEX') {
+      return new RegExp(test.expected, test.flags).test(code)
+    }
+
+    if (test.type === 'VALUE') {
+      return deepEqual(evaluate(`(${code})`), test.expected)
+    }
+
     return deepEqual(executeSolution(code, test.args), test.expected)
   } catch {
     return false

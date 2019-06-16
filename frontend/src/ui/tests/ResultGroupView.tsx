@@ -47,14 +47,32 @@ function getTypeName (type: string) {
 }
 
 function getMessage({ test, result }: ResultGroupItem) {
-  const call = formatCall(test.args)
-  if (result.type === 'PASS') {
-    return `${call} = ${prettyPrint(test.expected)}`
-  } else if (result.type === 'FAIL') {
-    return `${call} Expected ${prettyPrint(test.expected)}, ` +
-      `got ${prettyPrint(result.result)}`
+  if (test.type === 'FUNCTION') {
+    const call = formatCall(test.args)
+    if (result.type === 'PASS') {
+      return `${call} = ${prettyPrint(test.expected)}`
+    } else if (result.type === 'FAIL') {
+      return `${call} Expected ${prettyPrint(test.expected)}, ` +
+        `got ${prettyPrint(result.result)}`
+    } else {
+      return `${call} ${result.message}`
+    }
+  } else if (test.type === 'REGEX') {
+    const re = new RegExp(test.expected, test.flags)
+    return result.type === 'PASS'
+      ? `${re} matches input`
+      : `Input does not match ${re}`
+  } else if (test.type === 'VALUE') {
+    const value = prettyPrint(test.expected)
+    if (result.type === 'PASS') {
+      return `${value} = ${prettyPrint(test.expected)}`
+    } else if (result.type === 'FAIL') {
+      return `Expected ${value}, got ${prettyPrint(result.result)}`
+    } else {
+      return `${value} ${result.message}`
+    }
   } else {
-    return `${call} ${result.message}`
+    return 'Unknown test type'
   }
 }
 
