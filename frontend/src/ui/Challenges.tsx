@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { getChallenges } from '../domain/api'
 import { useAsync } from './hooks'
 import { Challenge } from './challenge/Challenge'
+import { Loader } from './Loader'
 
 export function Challenges () {
   const [challenges, error] = useAsync(getChallenges, [])
@@ -15,6 +16,7 @@ export function Challenges () {
 
   return (
     <Container>
+      {!challenges && <ChallengesLoader />}
       <List>
         {challenges && challenges.map(challenge => (
           <Item selected={challenge.id === (selected && selected.id)} key={challenge.id}>
@@ -58,6 +60,13 @@ const List = styled.ul`
   @media only screen and (max-width: 600px) {
     padding-bottom: 12px;
     border-bottom: 1px solid #ccc;
+  }
+`
+
+const ChallengesLoader = styled(Loader)`
+  grid-column: span 2;
+  & + ${List} {
+    display: none;
   }
 `
 
