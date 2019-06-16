@@ -3,6 +3,7 @@ import { challenges } from '../challenges'
 import { NotFound } from '../util/errors'
 import { SolutionCheckerService } from './SolutionCheckerService'
 import { Challenge } from 'src/challenges/Challenge'
+import { SlackAnnouncer } from './SlackAnnouncer'
 
 export interface ApiScore {
   player: string
@@ -11,7 +12,11 @@ export interface ApiScore {
 }
 
 export class ChallengeService {
-  constructor(private database: Knex, private checker: SolutionCheckerService) { }
+  constructor(
+    private database: Knex,
+    private checker: SolutionCheckerService,
+    private slackAnnouncer: SlackAnnouncer,
+  ) { }
 
   getChallenges(): Challenge[] {
     return challenges
@@ -88,6 +93,8 @@ export class ChallengeService {
         player,
         score: solution.length,
       })
+
+    this.slackAnnouncer.notify(challengeId, player, solution.length)
 
     return {
       success: true,

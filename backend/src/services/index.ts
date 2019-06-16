@@ -1,13 +1,20 @@
 import Knex from 'knex'
 import { ChallengeService } from './ChallengeService'
-import { SolutionCheckerService } from './SolutionCheckerService';
+import { SolutionCheckerService } from './SolutionCheckerService'
+import { SlackAnnouncer } from './SlackAnnouncer'
 
 export function setup(database: Knex) {
   const solutionCheckerService = new SolutionCheckerService()
-  const challengeStorage = new ChallengeService(database, solutionCheckerService)
+  const slackAnnouncer = new SlackAnnouncer(process.env.SLACK_WEBHOOK)
+  const challengeService = new ChallengeService(
+    database,
+    solutionCheckerService,
+    slackAnnouncer,
+  )
 
   return {
-    challengeStorage,
+    challengeService,
+    slackAnnouncer,
   }
 }
 

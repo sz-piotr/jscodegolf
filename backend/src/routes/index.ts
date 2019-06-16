@@ -4,6 +4,6 @@ import { apiRouter } from './api'
 
 export function router (services: Services) {
   const router = Router()
-  router.use('/', apiRouter(services.challengeStorage))
+  router.use('/', apiRouter(services.challengeService))
   return router
 }
