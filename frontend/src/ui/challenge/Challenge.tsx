@@ -18,7 +18,7 @@ export interface ChallengeProps {
 export const Challenge = ({ challenge }: ChallengeProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const confetti = useRef<ConfettiElement>(null)
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(localStorage.getItem(`solution_${challenge.id}`) || '')
   const [lastSubmitted, setLastSubmitted] = useState('')
   const { scores, submit, pending, error } = useChallenge(challenge.id, value)
 
@@ -26,6 +26,10 @@ export const Challenge = ({ challenge }: ChallengeProps) => {
     () => executeDebounced(value, challenge.tests),
     [value, challenge.tests],
   )
+
+  useEffect(() => {
+    localStorage.setItem(`solution_${challenge.id}`, value)
+  }, [value])
 
   useEffect(() => {
     if (ref.current) {
