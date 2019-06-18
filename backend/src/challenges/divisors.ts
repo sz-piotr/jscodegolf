@@ -3,7 +3,7 @@ import { Challenge } from './Challenge'
 export const divisors: Challenge = {
   id: 'divisors',
   title: 'Divisors',
-  description: 'Write a function that returns all of the divisors of a given number sorted in ascending order.',
+  description: 'Write a function that returns all of the divisors of a given number, sorted in ascending order.',
   tests: [
     [3, [1, 3]],
     [4, [1, 2, 4]],
